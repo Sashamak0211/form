@@ -1,0 +1,18 @@
+.inpit-style {
+    width: 1fr;
+    height: 20px;
+    border: 2px solid blue;
+    border-radius: 10%;
+    margin: 10px;
+}
+
+.sub-button {
+    border: 2px solid green
+}
+.sub-button:focus {
+    border: red;
+}
+.sub-button:hover {
+    color:red ;
+    border: ghostwhite;
+}
