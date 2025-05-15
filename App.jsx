@@ -16,54 +16,75 @@ function App() {
 
    const formError = emailError || passwordError || confirmPasswordError;
 
-  function sendData(updateState) {
-    console.log(updateState)
-
-  }
-  
-
     const onEmailBlur = () => {
+      const { email } = getState()
     if(email.length < 3) {
       setEmailError('Неверный Email. Должно быть не меньше 3 символов.')
     }
   }
 
   const onPasswordBlur = () => {
+    const { password } = getState()
     if(password.length < 3) {
       setPasswordError('Пароль должен быть больше 3 символов')
     }
   }
   const onConfirmPasswordBlur = () => {
+    const { password, confirmPassword } = getState()
     if(confirmPassword.length < 3) {
-      setConfirmPasswordError('Пароль должен содержать больше 3 символов')
+      setConfirmPasswordError('Пароль должен содержать больше 3 символов');
+    } else if( password !== confirmPassword) {
+      setConfirmPasswordError('Пароли не совпадают')
     }
-  }
+  };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    sendData(getState())
-  }
-  const {email, password, confirmPassword  } = getState()
-
-  const onChange = ({ target }) => { updateState(target.name, target.value)
+   const onChange = ({ target }) => { 
+    const { name, value } = target;
+    updateState(name, value)
       
 
-    if(target.name === 'email') {
-      if(!/^[\w_@.-]+$/.test(target.value) && target.value.length >= 3) {
-          setEmailError('Почта должна содержит недопустимые символы или длинну меньше 3')  
-      }else{
+    if(name === 'email') {
+      if(!/^[\w_@.-]+$/.test(value)) {
+          setEmailError('Почта должна содержит недопустимые символы')  
+      }else if( value.length <= 3) {
+        setEmailError('Почта меньше 3 симловов')
+      }
+      else{
         setEmailError(null)
       }
       
     }
-    if(target.name === 'password' && target.value.length >= 3) {
+    if(name === 'password' ) {
+      if( value.length < 3) {
+       setPasswordError('Пароль должен быть больше 3 символов')
+    }else {
       setPasswordError(null)
     }
-    if(target.name === 'confirmPassword' && target.value.length >= 3) {
-      setConfirmPasswordError(null)
     }
-  
+    if(name === 'confirmPassword') {
+      const { password } = getState();
+      if(value !== password) {
+        setConfirmPasswordError('Пароли не совпадают')
+      } else {
+        setConfirmPasswordError(null)
+      }
+    }
+      
+    }
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const state = getState()
+    console.log('Данные пошли', state);
+    
   }
+  const {email, password, confirmPassword  } = getState()
+
+ 
+  
+  
+
+  
 
   const isInvalid = !email || !password || !confirmPassword || !!formError;
 
