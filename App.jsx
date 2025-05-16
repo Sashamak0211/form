@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { useStore } from "./components/userstate"
 import  "./App.css"
-
+import { validateForm } from "./components/validate/validateFunction"
 
 function App() {
 
@@ -18,30 +18,34 @@ function App() {
 
     const onEmailBlur = () => {
       const { email } = getState()
-    if(email.length < 3) {
-      setEmailError('Неверный Email. Должно быть не меньше 3 символов.')
-    }
+      const errors = validateForm({ email })
+      setEmailError(errors.email || null)
   }
 
   const onPasswordBlur = () => {
     const { password } = getState()
-    if(password.length < 3) {
-      setPasswordError('Пароль должен быть больше 3 символов')
-    }
+    // if(password.length < 3) {
+    //   setPasswordError('Пароль должен быть больше 3 символов')
+    // }
+    const errors = validateForm({password})
+    setPasswordError( errors.password || null )
   }
   const onConfirmPasswordBlur = () => {
     const { password, confirmPassword } = getState()
-    if(confirmPassword.length < 3) {
-      setConfirmPasswordError('Пароль должен содержать больше 3 символов');
-    } else if( password !== confirmPassword) {
-      setConfirmPasswordError('Пароли не совпадают')
-    }
+    // if(confirmPassword.length < 3) {
+    //   setConfirmPasswordError('Пароль должен содержать больше 3 символов');
+    // } else if( password !== confirmPassword) {
+    //   setConfirmPasswordError('Пароли не совпадают')
+    // }
+    const errors = validateForm({password, confirmPassword})
+    setConfirmPasswordError(errors.confirmPassword || null)
   };
 
    const onChange = ({ target }) => { 
     const { name, value } = target;
     updateState(name, value)
       
+
 
     if(name === 'email') {
       if(!/^[\w_@.-]+$/.test(value)) {
