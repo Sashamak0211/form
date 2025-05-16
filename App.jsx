@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useStore } from "./components/userstate"
 import  "./App.css"
 import { validateForm } from "./components/validate/validateFunction"
@@ -7,12 +7,15 @@ import { validateForm } from "./components/validate/validateFunction"
 function App() {
 
     const {getState, updateState} = useStore()
+    const { email, password, confirmPassword } = getState()
   // const [email, setEmail] = useState('')
   // const [password, setPassword] = useState()
   // const [confirmPassword, setConfirmPassword] = useState()
     const [emailError, setEmailError] = useState(null)
     const [passwordError,  setPasswordError] = useState(null)
    const [confirmPasswordError, setConfirmPasswordError] = useState(null)
+
+   const refButton = useRef(null)
 
    const formError = emailError || passwordError || confirmPasswordError;
 
@@ -78,21 +81,22 @@ function App() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const state = getState()
-    console.log('Данные пошли', state);
+
+    const formData = getState()
+    const errors = validateForm(formData)
     
+    setEmailError(errors.email || null)
+    setPasswordError(errors.password || null)
+    setConfirmPasswordError(errors.confirmPassword || null)
+   
+     const isInvalid = Object.keys(errors).length > 0
+   
+    if(!isInvalid) {
+    refButton.current.focus()
   }
-  const {email, password, confirmPassword  } = getState()
-
+  }
  
-  
-  
-
-  
-
-  const isInvalid = !email || !password || !confirmPassword || !!formError;
-
-
+   const isInvalid = !email || !password || !confirmPassword || !!formError
   
 
   return (
@@ -126,6 +130,7 @@ function App() {
       onBlur={onConfirmPasswordBlur}
       />
       <button className="sub-button"
+      ref={refButton}
       type="submit"
       disabled={isInvalid}
       >

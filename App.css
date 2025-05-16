@@ -12,7 +12,3 @@
 .sub-button:focus {
     border: red;
 }
-.sub-button:hover {
-    color:red ;
-    border: ghostwhite;
-}
